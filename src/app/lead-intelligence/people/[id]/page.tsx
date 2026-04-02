@@ -338,9 +338,9 @@ export default function LeadProfilePage({ params }: { params: { id: string } }) 
               <div className="animate-fade-in">
                 <ConversationThread
                   channels={[
-                    { channel: "email",    messages: leadConversations.email.map((m) => ({ ...m, id: String(m.id), status: "read" as const })) },
-                    { channel: "linkedin", messages: leadConversations.linkedin.map((m) => ({ ...m, id: String(m.id), status: "read" as const })) },
-                    { channel: "whatsapp", messages: leadConversations.whatsapp.map((m) => ({ ...m, id: String(m.id), status: "read" as const })) },
+                    { channel: "email",    messages: leadConversations.email.map((m) => ({ ...m, id: String(m.id), status: "read" as const, from: m.from as "me" | "them" })) },
+                    { channel: "linkedin", messages: leadConversations.linkedin.map((m) => ({ ...m, id: String(m.id), status: "read" as const, from: m.from as "me" | "them" })) },
+                    { channel: "whatsapp", messages: leadConversations.whatsapp.map((m) => ({ ...m, id: String(m.id), status: "read" as const, from: m.from as "me" | "them" })) },
                     { channel: "sms",      messages: [] },
                     { channel: "call",     messages: [] },
                   ]}
@@ -550,7 +550,7 @@ export default function LeadProfilePage({ params }: { params: { id: string } }) 
                   </div>
                   <div className="bg-slate-50 rounded-xl p-4 font-mono text-xs text-slate-700 leading-relaxed border border-slate-200">
                     Hi {lead.firstName},<br /><br />
-                    Just following up on our previous conversation. Given that you're scaling growth at {lead.company}, I thought you'd find our recent case study on how we helped a similar SaaS company achieve 3x reply rates really valuable.<br /><br />
+                    Just following up on our previous conversation. Given that you&apos;re scaling growth at {lead.company}, I thought you&apos;d find our recent case study on how we helped a similar SaaS company achieve 3x reply rates really valuable.<br /><br />
                     Would you be open to a quick 15-min call this week to explore if we could deliver similar results for {lead.company}?<br /><br />
                     Best,<br />Emma
                   </div>

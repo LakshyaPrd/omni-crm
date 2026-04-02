@@ -132,7 +132,7 @@ export function SavedSearchBar({
           {/* Boolean hint */}
           <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 border-b border-brand-100">
             <span className="text-xs text-brand-700">
-              💡 Boolean search: <code className="font-mono bg-brand-100 px-1 rounded">"VP AND SaaS"</code>,{" "}
+              💡 Boolean search: <code className="font-mono bg-brand-100 px-1 rounded">&quot;VP AND SaaS&quot;</code>,{" "}
               <code className="font-mono bg-brand-100 px-1 rounded">CEO OR founder</code>,{" "}
               <code className="font-mono bg-brand-100 px-1 rounded">NOT intern</code>
             </span>

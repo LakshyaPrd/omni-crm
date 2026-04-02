@@ -183,7 +183,7 @@ export default function LeadSearchPage() {
               <div className="flex-1">
                 <h3 className="text-sm font-bold text-brand-900 mb-0.5">AI-Powered Search</h3>
                 <p className="text-xs text-brand-700 leading-relaxed">
-                  Describe who you're looking for in plain language. Our AI will find the best matches across all your imported leads.
+                  Describe who you&apos;re looking for in plain language. Our AI will find the best matches across all your imported leads.
                 </p>
               </div>
               <button className="shrink-0 flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-xl text-sm font-semibold hover:bg-brand-700 transition-colors">
@@ -268,7 +268,7 @@ export default function LeadSearchPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-slate-600">
                       <span className="font-semibold text-slate-900">{filtered.length}</span> leads found
-                      {search && <span className="text-slate-400"> for "<span className="text-slate-700 font-medium">{search}</span>"</span>}
+                      {search && <span className="text-slate-400"> for &quot;<span className="text-slate-700 font-medium">{search}</span>&quot;</span>}
                     </span>
                   </div>
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -284,7 +284,7 @@ export default function LeadSearchPage() {
                     <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mx-auto mb-4">
                       <Telescope className="w-8 h-8 text-slate-300" />
                     </div>
-                    <h3 className="font-semibold text-slate-700 mb-1">No results for "{search}"</h3>
+                    <h3 className="font-semibold text-slate-700 mb-1">No results for &quot;{search}&quot;</h3>
                     <p className="text-sm text-slate-400 mb-4">Try different keywords, adjust your filters, or use Boolean operators</p>
                     <div className="flex justify-center gap-2">
                       <button onClick={() => setSearch("")} className="btn-secondary text-xs">Clear search</button>
