@@ -1,111 +1,149 @@
-# OmniReach CRM — AI-Powered Omnichannel Lead Management
+# NexCRM – AI-Powered Sales & Hiring Platform
 
-A production-ready frontend for an omnichannel CRM system that unifies leads across Email, WhatsApp, LinkedIn, SMS, and Outreach — with AI context memory per lead and multi-company workspace isolation.
+A premium SaaS CRM frontend built with Next.js 14, Tailwind CSS, and Recharts.
+Inspired by HubSpot and Apollo.io, tailored for **Outreach + Hiring + AI + Unified Inbox**.
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
 
 ```bash
-# Install dependencies
+# 1. Navigate to the project
+cd nexcrm
+
+# 2. Install dependencies
 npm install
 
-# Run development server
+# 3. Start development server
 npm run dev
 
-# Open in browser
-http://localhost:3000
+# 4. Open in browser
+open http://localhost:3000
 ```
 
 ---
 
-## Pages & Features
-
-### `/dashboard`
-- KPI stat cards: total leads, active today, AI draft acceptance rate, avg response time
-- Recent leads table with stage badges and channel icons
-- Channel breakdown bar chart
-- Live activity feed (real-time-ready)
-
-### `/inbox`
-- Unified inbox showing all leads' last message across all channels
-- Filter by channel (All / Email / WhatsApp / LinkedIn / SMS)
-- Search across leads
-- Full conversation thread view with channel-labeled bubbles
-- Quick reply bar with AI Draft button
-
-### `/leads`
-- Full leads table with search + stage filter tabs
-- Lead score, channels, last touch time
-- Click any lead to open their profile
-
-### `/leads/[id]` — Lead Detail
-- Full profile header with channel identities (phone, email, LinkedIn handle, etc.)
-- **Unified conversation timeline** — all messages from all channels merged chronologically, labeled by channel
-- **AI Context Snapshot** — AI-generated summary of the lead, key facts, sentiment, and recommended next action
-- **AI Reply Composer** — context-aware draft with channel selector, regenerate button, and send
-- Lead score breakdown (engagement, intent, channel activity, response speed)
-- Notes section
-
-### `/companies`
-- Multi-company workspace management
-- Per-company stats: total leads, active leads, closed won, avg score
-- Lead avatar preview per company
-- Plan badge (Starter / Growth / Enterprise)
-
-### `/settings`
-- **Integrations**: Toggle Email, WhatsApp, LinkedIn, SMS, Outreach connections
-- **Notifications**: Toggle per-event alerts
-- **Security**: Role-based access control (Admin / Manager / Agent) + RLS status
-- **AI & API Keys**: Model selector (Sonnet / Opus / Haiku), API key input, context window config
-
----
-
-## Tech Stack
-
-| Layer | Tech |
-|---|---|
-| Framework | Next.js 14 (App Router) |
-| Styling | Tailwind CSS v3 |
-| Icons | Lucide React |
-| Fonts | Syne (display) + DM Sans (body) + DM Mono |
-| Language | TypeScript |
-
----
-
-## How to Connect a Real Backend
-
-1. **Replace mock data** — swap `lib/mockData.ts` imports with real API calls (fetch/SWR/React Query)
-2. **Database** — PostgreSQL with Supabase (row-level security per `company_id`)
-3. **Channel webhooks** — set up inbound parsers for each channel, POST to `/api/messages/inbound`
-4. **AI context** — on each inbound message, call Claude API with the lead's `AI_CONTEXT_SNAPSHOT` + new message, update snapshot, return AI draft
-5. **Auth** — add NextAuth.js or Supabase Auth, pass `company_id` via JWT claims for RLS
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-omnichannel-crm/
-├── app/
-│   ├── dashboard/page.tsx       # Main dashboard
-│   ├── inbox/page.tsx           # Unified inbox
-│   ├── leads/page.tsx           # Leads table
-│   ├── leads/[id]/page.tsx      # Lead detail + AI composer
-│   ├── companies/page.tsx       # Multi-company management
-│   ├── settings/page.tsx        # Settings & integrations
-│   ├── layout.tsx
-│   ├── page.tsx                 # Redirects to /dashboard
-│   └── globals.css
-├── components/
-│   ├── Sidebar.tsx              # Navigation + company switcher
-│   ├── ChannelBadge.tsx         # Colored channel pill
-│   ├── StageBadge.tsx           # Lead stage pill
-│   ├── ConversationTimeline.tsx # Cross-channel message thread
-│   └── AIComposer.tsx           # AI draft + send UI
-├── lib/
-│   └── mockData.ts              # All mock data + TypeScript types
+nexcrm/
+├── src/
+│   ├── app/                        # Next.js App Router pages
+│   │   ├── page.tsx                # Dashboard
+│   │   ├── leads/page.tsx          # Leads Management
+│   │   ├── companies/page.tsx      # Companies
+│   │   ├── campaigns/page.tsx      # Campaign Builder
+│   │   ├── inbox/page.tsx          # Unified Inbox
+│   │   ├── hiring/page.tsx         # Hiring & Candidates
+│   │   ├── integrations/page.tsx   # Integrations
+│   │   ├── reports/page.tsx        # Reports & Analytics
+│   │   └── settings/page.tsx       # Settings
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Sidebar.tsx         # Collapsible sidebar navigation
+│   │   │   ├── Navbar.tsx          # Top navbar with company switcher
+│   │   │   └── MainLayout.tsx      # Main layout wrapper
+│   │   ├── ui/
+│   │   │   ├── Badge.tsx           # Badge + StatusBadge components
+│   │   │   ├── Button.tsx          # Button variants (primary/secondary/ghost/danger)
+│   │   │   ├── Card.tsx            # Card components
+│   │   │   └── Avatar.tsx          # Avatar with initials
+│   │   └── dashboard/
+│   │       └── KpiCard.tsx         # KPI metric card
+│   └── lib/
+│       ├── data.ts                 # Dummy/mock data
+│       └── utils.ts                # Utility functions (cn, color helpers)
 ├── tailwind.config.ts
-├── next.config.mjs
-└── tsconfig.json
+├── next.config.js
+└── package.json
 ```
+
+---
+
+## 🎨 Design System
+
+### Colors
+- **Primary**: Indigo/Brand (`brand-*`) — `#6366f1`
+- **Success**: Emerald
+- **Warning**: Amber
+- **Danger**: Red
+- **Neutral**: Slate
+
+### Components
+| Component | Variants |
+|-----------|----------|
+| Button | `primary`, `secondary`, `ghost`, `danger` |
+| Badge | `default`, `success`, `warning`, `danger`, `info`, `purple` |
+| StatusBadge | Auto-maps status strings to badge variants |
+| Avatar | Sizes: `xs`, `sm`, `md`, `lg` |
+| Card | With/without padding, hover states |
+
+### CSS Classes (Global)
+```css
+.card            /* White card with border + shadow */
+.btn-primary     /* Brand blue button */
+.btn-secondary   /* White bordered button */
+.btn-ghost       /* Transparent hover button */
+.input-field     /* Styled form input */
+.badge           /* Small pill badge */
+.sidebar-link    /* Sidebar nav item */
+.table-header    /* Table column header */
+.table-row       /* Table row with hover */
+```
+
+---
+
+## 📄 Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Dashboard with KPIs, charts, activity feed |
+| `/leads` | Lead table with filters, search, AI score, drawer |
+| `/companies` | Company grid/table view |
+| `/campaigns` | Campaign list + visual sequence builder |
+| `/inbox` | Full-screen unified inbox (email/WA/LinkedIn/SMS) |
+| `/hiring` | Candidate table + kanban board |
+| `/integrations` | Integration cards with connect/disconnect |
+| `/reports` | Analytics charts (open rates, replies, conversions) |
+| `/settings` | Company, Team, API Keys, Billing tabs |
+
+---
+
+## ✨ Key Features
+
+- **Multi-tenant Company Switcher** in navbar
+- **Collapsible Sidebar** navigation
+- **Campaign Sequence Builder** with visual drag-and-drop-style steps
+- **Unified Inbox** with 3-panel layout + AI Reply suggestions
+- **Lead Detail Drawer** with AI score and activity timeline
+- **Candidate Kanban Board** with AI matching scores
+- **Recharts** for all data visualizations
+- **Fully typed** with TypeScript
+- **All dummy data** included for immediate preview
+
+---
+
+## 🔧 Backend Integration
+
+All pages use dummy data from `src/lib/data.ts`. To connect to a backend:
+
+1. Replace data imports with API calls (React Query / SWR recommended)
+2. Add authentication (NextAuth.js or Clerk)
+3. Add real-time updates (WebSockets or Pusher) for inbox
+
+---
+
+## 📦 Tech Stack
+
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **Tailwind CSS**
+- **Recharts** (charts)
+- **Lucide React** (icons)
+- **clsx + tailwind-merge** (class utilities)
