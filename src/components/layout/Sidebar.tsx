@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, Building2, Zap, Inbox,
   UserCheck, PlugZap, BarChart3, Settings, ChevronLeft,
   ChevronRight, Sparkles, Bot, Brain, UserSearch, Globe,
-  FileDown, RefreshCw, Telescope, ChevronDown
+  FileDown, RefreshCw, Telescope, ChevronDown, Briefcase, Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +29,8 @@ const leadIntelItems = [
   { label: "Company Profiles", href: "/lead-intelligence/companies",     icon: Globe                   },
   { label: "Lead Sources",     href: "/lead-intelligence/sources",       icon: Telescope               },
   { label: "Sync History",     href: "/lead-intelligence/sync-history",  icon: RefreshCw               },
+  { label: "Hiring Search",    href: "/lead-intelligence/jobs",          icon: Briefcase, badge: "New" },
+  { label: "Email Finder",     href: "/lead-intelligence/email-finder",  icon: Mail                    },
 ];
 
 export function Sidebar() {

@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/Badge";
-import { companiesList, leads } from "@/lib/data";
-import { Search, Plus, Building2, Users, MoreHorizontal, ExternalLink, Mail, Activity } from "lucide-react";
+import { companiesList } from "@/lib/data";
+import { Search, Plus, Building2, Users, MoreHorizontal, Mail, Activity, Briefcase } from "lucide-react";
+import { AddCompanyModal } from "@/components/companies/AddCompanyModal";
+import { crmStore } from "@/lib/crmStore";
+import Link from "next/link";
 
 const industryColors: Record<string, string> = {
   Fintech: "bg-emerald-100 text-emerald-700",
@@ -19,24 +22,105 @@ const industryColors: Record<string, string> = {
 const companyInitials = (name: string) => name.split(" ").map((w) => w[0]).join("").slice(0, 2);
 const companyColors = ["bg-violet-600","bg-blue-600","bg-pink-600","bg-emerald-600","bg-orange-600","bg-cyan-600"];
 
+interface StoredCompany {
+  id: number;
+  name: string;
+  industry: string;
+  leads: number;
+  status: string;
+  revenue: string;
+  contacts: number;
+  website?: string;
+  hq?: string;
+  size?: string;
+  description?: string;
+  employeeCount?: number;
+}
+
 export default function CompaniesPage() {
   const [search, setSearch] = useState("");
   const [view, setView] = useState<"grid" | "table">("grid");
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [companies, setCompanies] = useState<StoredCompany[]>(
+    companiesList.map((c) => ({ ...c, status: c.status || "prospect" }))
+  );
+  const [toast, setToast] = useState("");
 
-  const filtered = companiesList.filter((c) =>
+  // Load companies added from Job Search via crmStore
+  useEffect(() => {
+    const fromJobSearch = crmStore.getCompanies();
+    if (fromJobSearch.length) {
+      const mapped: StoredCompany[] = fromJobSearch.map((c) => ({
+        id: Number(c.id.replace("jc-", "")) || Date.now(),
+        name: c.name,
+        industry: c.industry || "Other",
+        leads: 0,
+        status: "prospect",
+        revenue: "—",
+        contacts: 0,
+        website: c.website,
+        hq: c.location,
+        size: c.size,
+        description: `Hiring: ${c.jobTitle ?? ""} · Source: ${c.platform ?? "Job Search"}`,
+      }));
+      setCompanies((prev) => {
+        const existingNames = new Set(prev.map((c) => c.name.toLowerCase()));
+        const newOnes = mapped.filter((c) => !existingNames.has(c.name.toLowerCase()));
+        return newOnes.length ? [...newOnes, ...prev] : prev;
+      });
+    }
+  }, []);
+
+  const filtered = companies.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||
     c.industry.toLowerCase().includes(search.toLowerCase())
   );
 
+  function handleSave(data: { company: { name: string; website: string; industry: string; size: string; hq: string; description: string; founded: string; revenue: string; linkedinUrl: string; tags: string }; employees: { firstName: string; lastName: string; email: string; [key: string]: string }[] }) {
+    const { company, employees } = data;
+    const newCompany: StoredCompany = {
+      id: Date.now(),
+      name: company.name,
+      industry: company.industry || "Other",
+      leads: 0,
+      status: "prospect",
+      revenue: company.revenue || "—",
+      contacts: employees.filter((e) => e.firstName || e.email).length,
+      website: company.website,
+      hq: company.hq,
+      size: company.size,
+      description: company.description,
+      employeeCount: employees.filter((e) => e.firstName || e.email).length,
+    };
+    setCompanies((prev) => [newCompany, ...prev]);
+    setShowAddModal(false);
+    setToast(`${company.name} added successfully!`);
+    setTimeout(() => setToast(""), 3500);
+  }
+
   return (
     <MainLayout>
       <div className="animate-slide-in-up">
+        {/* Toast */}
+        {toast && (
+          <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white text-sm font-medium px-4 py-3 rounded-xl shadow-lg flex items-center gap-2">
+            <span>✓</span> {toast}
+          </div>
+        )}
+
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-xl font-bold text-slate-900">Companies</h1>
-            <p className="text-sm text-slate-500 mt-0.5">{companiesList.length} companies tracked</p>
+            <p className="text-sm text-slate-500 mt-0.5">{companies.length} companies tracked</p>
           </div>
-          <Button><Plus className="w-4 h-4" />Add Company</Button>
+          <div className="flex items-center gap-2">
+            <Link href="/lead-intelligence/jobs" className="btn-secondary text-sm flex items-center gap-2">
+              <Briefcase className="w-4 h-4" />Find Hiring Companies
+            </Link>
+            <Button onClick={() => setShowAddModal(true)}>
+              <Plus className="w-4 h-4" />Add Company
+            </Button>
+          </div>
         </div>
 
         {/* Toolbar */}
@@ -76,6 +160,10 @@ export default function CompaniesPage() {
                   </div>
                   <StatusBadge status={company.status} />
                 </div>
+
+                {company.hq && (
+                  <p className="text-xs text-slate-400 mb-3 truncate">{company.hq}</p>
+                )}
 
                 <div className="grid grid-cols-3 gap-3 py-3 border-t border-b border-slate-100 my-3">
                   {[
@@ -126,7 +214,10 @@ export default function CompaniesPage() {
                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs ${companyColors[i % companyColors.length]}`}>
                           {companyInitials(company.name)}
                         </div>
-                        <span className="text-sm font-medium text-slate-800">{company.name}</span>
+                        <div>
+                          <span className="text-sm font-medium text-slate-800">{company.name}</span>
+                          {company.hq && <p className="text-xs text-slate-400">{company.hq}</p>}
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
@@ -148,6 +239,10 @@ export default function CompaniesPage() {
           </Card>
         )}
       </div>
+
+      {showAddModal && (
+        <AddCompanyModal onClose={() => setShowAddModal(false)} onSave={handleSave} />
+      )}
     </MainLayout>
   );
 }
