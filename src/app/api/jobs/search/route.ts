@@ -48,7 +48,6 @@ async function fetchJSearch(role: string, location: string): Promise<NormalizedJ
       { headers: { "X-RapidAPI-Key": key, "X-RapidAPI-Host": "jsearch.p.rapidapi.com" }, signal: AbortSignal.timeout(8000) }
     );
     const data = await res.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data.data ?? []).map((j: any, i: number): NormalizedJob => ({
       id: `jsearch-${j.job_id ?? i}`,
       title: j.job_title ?? role,
@@ -99,7 +98,6 @@ async function fetchAdzuna(role: string, location: string): Promise<NormalizedJo
       { signal: AbortSignal.timeout(8000) }
     );
     const data = await res.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data.results ?? []).map((j: any, i: number): NormalizedJob => ({
       id: `adzuna-${j.id ?? i}`,
       title: j.title ?? role,
@@ -130,7 +128,6 @@ async function fetchRemotive(role: string): Promise<NormalizedJob[]> {
       { signal: AbortSignal.timeout(8000) }
     );
     const data = await res.json();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (data.jobs ?? []).map((j: any, i: number): NormalizedJob => ({
       id: `rm-${j.id ?? i}`,
       title: j.title ?? role,
